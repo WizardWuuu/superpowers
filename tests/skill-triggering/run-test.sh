@@ -1,9 +1,9 @@
 #!/bin/bash
-# Test skill triggering with naive prompts
+# Test skill triggering with natural prompts
 # Usage: ./run-test.sh <skill-name> <prompt-file>
 #
-# Tests whether Claude triggers a skill based on a natural prompt
-# (without explicitly mentioning the skill)
+# Tests whether Claude triggers a skill based on a natural prompt.
+# Some prompts are intentionally naive auto-trigger cases; others may be explicit opt-in cases.
 
 set -e
 
@@ -22,7 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Get the superpowers plugin root (two levels up from tests/skill-triggering)
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-TIMESTAMP=$(date +%s)
+TIMESTAMP="$(date +%s)-$$"
 OUTPUT_DIR="/tmp/superpowers-tests/${TIMESTAMP}/skill-triggering/${SKILL_NAME}"
 mkdir -p "$OUTPUT_DIR"
 
@@ -44,11 +44,37 @@ LOG_FILE="$OUTPUT_DIR/claude-output.json"
 cd "$OUTPUT_DIR"
 
 echo "Plugin dir: $PLUGIN_DIR"
-echo "Running claude -p with naive prompt..."
-timeout 300 claude -p "$PROMPT" \
+echo "Running claude -p with natural prompt..."
+
+run_with_timeout() {
+    if command -v timeout >/dev/null 2>&1; then
+        timeout 300 "$@"
+        return
+    fi
+
+    if command -v gtimeout >/dev/null 2>&1; then
+        gtimeout 300 "$@"
+        return
+    fi
+
+    python3 - "$@" <<'PY'
+import subprocess
+import sys
+
+cmd = sys.argv[1:]
+try:
+    completed = subprocess.run(cmd, timeout=300)
+    sys.exit(completed.returncode)
+except subprocess.TimeoutExpired:
+    sys.exit(124)
+PY
+}
+
+run_with_timeout claude -p "$PROMPT" \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
     --max-turns "$MAX_TURNS" \
+    --verbose \
     --output-format stream-json \
     > "$LOG_FILE" 2>&1 || true
 

@@ -1,11 +1,13 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: Use only when the user explicitly asks for TDD, test-first development, or red-green-refactor before writing implementation code; do not use for generic feature or bugfix requests
 ---
 
 # Test-Driven Development (TDD)
 
 ## Overview
+
+This skill is opt-in. If the user did not explicitly ask for TDD, test-first development, or red-green-refactor, do not use this skill.
 
 Write the test first. Watch it fail. Write minimal code to pass.
 
@@ -15,18 +17,17 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 ## When to Use
 
-**Always:**
-- New features
-- Bug fixes
-- Refactoring
-- Behavior changes
+**Only when explicitly requested by your human partner:**
+- "Use TDD"
+- "Do this test-first"
+- "Follow red-green-refactor"
+- "Write the failing test first"
 
-**Exceptions (ask your human partner):**
-- Throwaway prototypes
-- Generated code
-- Configuration files
-
-Thinking "skip TDD just this once"? Stop. That's rationalization.
+**Do NOT use for:**
+- Generic feature requests
+- Generic bug fixes
+- Generic refactoring requests
+- Any implementation task where TDD was not explicitly requested
 
 ## The Iron Law
 

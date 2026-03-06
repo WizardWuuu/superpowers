@@ -7,9 +7,9 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, verification strategy, docs they might need to check, and how to prove the change works. Give them the whole plan as bite-sized tasks. DRY. YAGNI. Risk-appropriate verification. Frequent commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good verification strategy very well.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
@@ -20,10 +20,10 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
+- "Choose the verification for this change" - step
+- "Implement the minimal code" - step
+- "Run targeted verification" - step
+- "Run broader regression/build checks" - step
 - "Commit" - step
 
 ## Plan Document Header
@@ -52,31 +52,28 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 **Files:**
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+- Verify: `tests/exact/path/to/test.py` or exact build/test command
 
-**Step 1: Write the failing test**
+**Step 1: Choose the verification for this change**
 
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
-```
+Run: `pytest tests/path/test.py::test_name -v` or other exact command
+Goal: Choose the smallest command that proves the requirement.
 
-**Step 2: Run test to verify it fails**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
-
-**Step 3: Write minimal implementation**
+**Step 2: Write minimal implementation**
 
 ```python
 def function(input):
     return expected
 ```
 
-**Step 4: Run test to verify it passes**
+**Step 3: Run targeted verification**
 
 Run: `pytest tests/path/test.py::test_name -v`
+Expected: PASS
+
+**Step 4: Run broader verification**
+
+Run: `pytest tests/path/test.py -v`
 Expected: PASS
 
 **Step 5: Commit**
@@ -92,7 +89,8 @@ git commit -m "feat: add specific feature"
 - Complete code in plan (not "add validation")
 - Exact commands with expected output
 - Reference relevant skills with @ syntax
-- DRY, YAGNI, TDD, frequent commits
+- Only include TDD steps when the user explicitly requested TDD
+- DRY, YAGNI, risk-appropriate verification, frequent commits
 
 ## Execution Handoff
 

@@ -30,7 +30,7 @@ Task tool (general-purpose):
 
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
+    2. Run the verification the task requires; add tests only when the task, user request, or codebase patterns call for them
     3. Verify implementation works
     4. Commit your work
     5. Self-review (see below)
@@ -59,11 +59,12 @@ Task tool (general-purpose):
     - Did I avoid overbuilding (YAGNI)?
     - Did I only build what was requested?
     - Did I follow existing patterns in the codebase?
+    - Did I avoid introducing abstractions solely to make unit testing easier?
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
-    - Did I follow TDD if required?
-    - Are tests comprehensive?
+    - Did I follow the requested verification strategy?
+    - Are tests or other verification steps appropriate for the change?
 
     If you find issues during self-review, fix them now before reporting.
 

@@ -1,4 +1,6 @@
-I need to add a new feature to validate email addresses. It should:
+I need to add a new feature to validate email addresses. Use TDD for this and follow a test-first, red-green-refactor workflow.
+
+It should:
 - Check that there's an @ symbol
 - Check that there's at least one character before the @
 - Check that there's a dot in the domain part
